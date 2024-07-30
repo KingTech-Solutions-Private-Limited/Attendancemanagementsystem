@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #7ab2b2;
+  overflow-y: auto;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #cde8e5;
+  padding: 10px 20px;
+  text-align: center;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.header .title {
+  font-size: 24px;
+  color: #111111;
+  font-family: "Times New Roman";
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+@media (min-width: 480px) {
+  .header .title {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .header .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header .title {
+    font-size: 3rem;
+  }
+}
+
+.container-7 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #4d869c;
+  width: 500px;
+  margin-top: 75px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.menu {
+  font-family: "Inter", sans-serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.container {
+  border-radius: 1.6rem;
+  background: #eef7ff;
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 300px;
+  height: 50px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.container span {
+  font-family: "Inter", sans-serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: #000000;
+}
+
+.content-container {
+  flex: 1;
+  margin-top: 55px;
+  padding: 20px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content-container img {
+  margin-top: 25px;
+  width: 750px;
+  height: 500px;
+}
+
+@media (min-width: 769px) {
+  .home-page {
+    flex-direction: row;
+  }
+
+  .container-7 {
+    flex: 1;
+  }
+
+  .content-container {
+    flex: 3;
+  }
+
+  .menu {
+    font-size: 2.5rem;
+  }
+
+  .container span {
+    font-size: 1.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu {
+    font-size: 3rem;
+  }
+
+  .container span {
+    font-size: 2rem;
+  }
+}
