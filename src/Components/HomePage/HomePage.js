@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./HomePage.css";
 import homeImage from "../../Images/Home.jpg";
-import RegisterUser from "../RegisterUser/RegisterUser";
+import RegisterStudent from "../RegisterStudent/RegisterStudent";
 
 function HomePage() {
   const [selectedMenu, setSelectedMenu] = useState();
@@ -16,7 +16,7 @@ function HomePage() {
         <div className="container">
           <span
             className="register-user"
-            onClick={() => setSelectedMenu(<RegisterUser/>)}
+            onClick={() => setSelectedMenu(<RegisterStudent/>)}
           >
             Register User
           </span>
