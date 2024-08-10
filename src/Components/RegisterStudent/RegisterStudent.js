@@ -1,25 +1,77 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./RegisterStudent.css";
-import placeholderImage from "../../Images/Login.jpeg";
+import placeholderImage from "../../Images/SelectedImage.jpg";
+
+function dataURLtoBlob(dataURL) {
+  const [header, data] = dataURL.split(",");
+  const mimeString = header.split(":")[1].split(";")[0];
+  const byteString = atob(data);
+  const arrayBuffer = new ArrayBuffer(byteString.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < byteString.length; i++) {
+    uint8Array[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([arrayBuffer], { type: mimeString });
+}
 
 function RegisterStudent() {
   const [formData, setFormData] = useState({
     fullName: "",
     emailId: "",
-    gender: "",
+    gender: "Male",
     phoneNo: "",
     address: "",
     state: "",
     country: "",
   });
 
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [filteredState, setFilteredState] = useState([]);
   const [selectedImage, setSelectedImage] = useState(placeholderImage);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [countryResponse, stateResponse] = await Promise.all([
+          fetch("https://localhost:7152/Student/GetAllCountry"),
+          fetch("https://localhost:7152/Student/GetAllState"),
+        ]);
 
-  const handleImageChange = (e) => {
+        if (!countryResponse.ok || !stateResponse.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const countriesData = await countryResponse.json();
+        const statesData = await stateResponse.json();
+
+        setCountries(countriesData);
+        setStates(statesData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filterStateByCountry = states.filter(
+      (x) => x.countryId === parseInt(formData.country)
+    );
+    setFilteredState(filterStateByCountry);
+  }, [formData.country, states]);
+
+  const handleChange = useCallback(
+    (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    },
+    [formData]
+  );
+
+  const handleImageChange = useCallback((e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -28,15 +80,9 @@ function RegisterStudent() {
       };
       reader.readAsDataURL(file);
     }
-  };
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add your submission logic here
-  };
-
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setFormData({
       fullName: "",
       emailId: "",
@@ -47,7 +93,47 @@ function RegisterStudent() {
       country: "",
     });
     setSelectedImage(placeholderImage);
-  };
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.append("Full_Name", formData.fullName);
+      formDataToSubmit.append("Email", formData.emailId);
+      formDataToSubmit.append("Gender", formData.gender);
+      formDataToSubmit.append("Phone_Number", formData.phoneNo);
+      formDataToSubmit.append("Address", formData.address);
+      formDataToSubmit.append("State", formData.state);
+      formDataToSubmit.append("Country", formData.country);
+
+      if (selectedImage !== placeholderImage) {
+        const blob = dataURLtoBlob(selectedImage);
+        formDataToSubmit.append("Image", blob, "image.jpg");
+      }
+
+      try {
+        const response = await fetch(
+          "https://localhost:7152/Student/CreateStudent",
+          {
+            method: "POST",
+            body: formDataToSubmit,
+          }
+        );
+
+        if (response.ok) {
+          alert("Student registered successfully.");
+          handleClear();
+        } else {
+          console.error("Error during registration.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+    [formData, selectedImage, handleClear]
+  );
 
   return (
     <div className="registration-container">
@@ -63,6 +149,7 @@ function RegisterStudent() {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="form-group">
@@ -73,6 +160,7 @@ function RegisterStudent() {
                 name="emailId"
                 value={formData.emailId}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="form-group">
@@ -115,6 +203,7 @@ function RegisterStudent() {
                 name="phoneNo"
                 value={formData.phoneNo}
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="form-group">
@@ -124,22 +213,8 @@ function RegisterStudent() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
+                required
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="state">State</label>
-              <select
-                id="state"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-              >
-                <option value="">Select State</option>
-                <option value="State1">State1</option>
-                <option value="State2">State2</option>
-                <option value="State3">State3</option>
-                {/* Add more options as needed */}
-              </select>
             </div>
             <div className="form-group">
               <label htmlFor="country">Country</label>
@@ -148,12 +223,31 @@ function RegisterStudent() {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
+                required
               >
                 <option value="">Select Country</option>
-                <option value="Country1">Country1</option>
-                <option value="Country2">Country2</option>
-                <option value="Country3">Country3</option>
-                {/* Add more options as needed */}
+                {countries.map((country) => (
+                  <option key={country.countryId} value={country.countryId}>
+                    {country.countryName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="state">State</label>
+              <select
+                id="state"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select State</option>
+                {filteredState.map((state) => (
+                  <option key={state.stateId} value={state.stateId}>
+                    {state.stateName}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -166,6 +260,7 @@ function RegisterStudent() {
                 name="image"
                 accept="image/*"
                 onChange={handleImageChange}
+                required
               />
             </div>
             <div>
