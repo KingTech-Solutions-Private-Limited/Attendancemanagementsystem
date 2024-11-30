@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./HomePage.css";
 import homeImage from "../../Images/Home.jpg";
 import RegisterStudent from "../RegisterStudent/RegisterStudent";
+import UpdateStudent from "../UpdatePage/UpdateStudent";
 import ViewPage from "../ViewPage/ViewPage";
 
 function HomePage() {
@@ -26,7 +27,7 @@ function HomePage() {
           <span className="view-user" onClick={() => setSelectedMenu(<ViewPage/>)}>View User</span>
         </div>
         <div className="container">
-          <span className="update-user">Update User</span>
+          <span className="update-user" onClick={() => setSelectedMenu(<UpdateStudent/>)}>Update User</span>
         </div>
         <div className="container">
           <span className="delete-user">Delete User</span>
