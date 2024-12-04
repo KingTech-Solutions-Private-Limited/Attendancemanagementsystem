@@ -56,6 +56,12 @@ function UpdateStudent() {
         country: studentData.country || "",
       }));
 
+      if (studentData.image) {
+        setSelectedImage(`data:image/jpeg;base64,${studentData.image}`);
+      } else {
+        setSelectedImage(placeholderImage);
+      }
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -130,6 +136,7 @@ function UpdateStudent() {
       e.preventDefault();
 
       const formDataToSubmit = new FormData();
+      formDataToSubmit.append("Student_Id", formData.student_Id);
       formDataToSubmit.append("Full_Name", formData.fullName);
       formDataToSubmit.append("Email", formData.emailId);
       formDataToSubmit.append("Gender", formData.gender);
@@ -145,18 +152,18 @@ function UpdateStudent() {
 
       try {
         const response = await fetch(
-          "https://localhost:7152/Student/CreateStudent",
+          "https://localhost:7152/Student/EditStudent",
           {
-            method: "POST",
+            method: "PUT",
             body: formDataToSubmit,
           }
         );
 
         if (response.ok) {
-          alert("Student registered successfully.");
+          alert("Update student details successfully.");
           handleClear();
         } else {
-          console.error("Error during registration.");
+          console.error("Error during updation.");
         }
       } catch (error) {
         console.error("Error:", error);
