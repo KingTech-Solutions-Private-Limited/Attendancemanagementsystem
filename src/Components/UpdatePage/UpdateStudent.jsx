@@ -61,7 +61,6 @@ function UpdateStudent() {
       } else {
         setSelectedImage(placeholderImage);
       }
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -171,6 +170,26 @@ function UpdateStudent() {
     },
     [formData, selectedImage, handleClear]
   );
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7152/Student/DeleteStudent/${formData.student_Id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        alert("Student deleted successfully.");
+        handleClear();
+      } else {
+        console.error("Error during deletation.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <div className="registration-container">
@@ -328,7 +347,10 @@ function UpdateStudent() {
           </div>
         </div>
         <div className="button-group">
-          <button type="submit">Register</button>
+          <button type="submit">Update</button>
+          <button className="deleteButton" type="button" onClick={handleDelete}>
+            Delete
+          </button>
           <button type="button" onClick={handleClear}>
             Clear
           </button>
