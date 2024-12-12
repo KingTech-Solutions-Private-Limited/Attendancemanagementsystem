@@ -4,6 +4,7 @@ import homeImage from "../../Images/Home.jpg";
 import RegisterStudent from "../RegisterStudent/RegisterStudent";
 import UpdateStudent from "../UpdatePage/UpdateStudent";
 import ViewPage from "../ViewPage/ViewPage";
+import QRPage from "../QRPage/QRPage"
 
 function HomePage() {
   const [selectedMenu, setSelectedMenu] = useState();
@@ -33,7 +34,7 @@ function HomePage() {
           <span className="delete-user">Delete User</span>
         </div>
         <div className="container">
-          <span className="generate-qr">Generate QR</span>
+          <span className="generate-qr" onClick={() => setSelectedMenu(<QRPage/>)}>Generate QR</span>
         </div>
         <div className="container">
           <span className="view-qr">View QR</span>

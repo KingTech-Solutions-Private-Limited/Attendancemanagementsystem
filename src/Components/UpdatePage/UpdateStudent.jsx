@@ -334,7 +334,6 @@ function UpdateStudent() {
                 name="image"
                 accept="image/*"
                 onChange={handleImageChange}
-                required
               />
             </div>
             <div>
