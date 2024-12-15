@@ -3,6 +3,7 @@ import "./ViewPage.css";
 
 function ViewPage() {
   const [studentDetails, setStudentDetails] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,9 +27,22 @@ function ViewPage() {
     fetchData();
   }, []);
 
+  const filteredStudents = studentDetails.filter((item) =>
+    Object.values(item).some((value) =>
+      value?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   return (
     <div className="view-container">
       <h2>View Student Details</h2>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
       <div className="table-container">
         <div className="table-wrapper">
           <table>
@@ -44,7 +58,7 @@ function ViewPage() {
               </tr>
             </thead>
             <tbody>
-              {studentDetails.map((item) => (
+              {filteredStudents.map((item) => (
                 <tr key={item.student_Id}>
                   <td>{item.student_Id}</td>
                   <td>{item.full_Name}</td>

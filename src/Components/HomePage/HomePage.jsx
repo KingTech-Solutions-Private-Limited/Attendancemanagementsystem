@@ -31,13 +31,7 @@ function HomePage() {
           <span className="update-user" onClick={() => setSelectedMenu(<UpdateStudent/>)}>Update User</span>
         </div>
         <div className="container">
-          <span className="delete-user">Delete User</span>
-        </div>
-        <div className="container">
           <span className="generate-qr" onClick={() => setSelectedMenu(<QRPage/>)}>Generate QR</span>
-        </div>
-        <div className="container">
-          <span className="view-qr">View QR</span>
         </div>
         <div className="container">
           <span className="mark-attendance">Mark Attendance</span>

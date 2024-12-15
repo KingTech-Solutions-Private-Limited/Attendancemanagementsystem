@@ -13,6 +13,10 @@ h2 {
   font-weight: bolder;
 }
 
+.search-input{
+  margin-left: 800px;
+}
+
 .table-container {
   width: 100%;
   /* margin: 20px auto; */
@@ -25,7 +29,7 @@ h2 {
 }
 
 .table-wrapper {
-  max-height: 500px; /* Set the height of the table container */
+  max-height: 450px; /* Set the height of the table container */
   overflow-y: auto; /* Enable vertical scroll */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
